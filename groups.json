@@ -3,6 +3,7 @@
     {
       "name": "Группа 1",
       "group_id": 0,
+      "admins": [],
       "trusted_users": [],
       "enabled": true
     }
