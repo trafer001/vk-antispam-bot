@@ -1,3 +1,10 @@
 {
-  "groups": []
+  "groups": [
+    {
+      "name": "Группа 1",
+      "group_id": 0,
+      "trusted_users": [],
+      "enabled": true
+    }
+  ]
 }
