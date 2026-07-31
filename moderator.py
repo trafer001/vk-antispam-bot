@@ -1,8 +1,10 @@
-def should_delete(user_id, group):
-    return not is_allowed(user_id, group)
+def is_admin(user_id, group):
+    return user_id in group.get("admins", [])
+
 
 def is_trusted(user_id, group):
     return user_id in group.get("trusted_users", [])
+
 
 def is_allowed(user_id, group):
     return (
@@ -10,12 +12,6 @@ def is_allowed(user_id, group):
         or is_trusted(user_id, group)
     )
 
+
 def should_delete(user_id, group):
-
-    if is_admin(user_id, group):
-        return False
-
-    if is_trusted(user_id, group):
-        return False
-
-    return True
+    return not is_allowed(user_id, group)
