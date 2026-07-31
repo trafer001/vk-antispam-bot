@@ -1,57 +1,47 @@
-import json
-import os
-import vk_api
-from vk_api.longpoll import VkBotLongPoll, VkBotEventType
-from dotenv import load_dotenv
-
-load_dotenv()
-
-VK_TOKEN = os.getenv("VK_TOKEN")
-
-print("VK AntiSpam Bot запускается...")
-
-if not VK_TOKEN:
-    print("Ошибка: токен VK не найден")
-    exit()
-
-vk_session = vk_api.VkApi(token=VK_TOKEN)
-
-vk = vk_session.get_api()
-
-with open("groups.json", "r", encoding="utf-8") as file:
-    config = json.load(file)
-
-groups = config.get("groups", [])
-
-print(f"Групп загружено: {len(groups)}")
+from vk_api.bot_longpoll import VkBotEventType
+from moderator import should_delete
 
 
-# Пока тестируем первую группу
-group = groups[0]
+def start_bot(connection):
 
-group_id = group["group_id"]
+    vk = connection["vk"]
+    longpoll = connection["longpoll"]
+    group = connection["group"]
 
-print("Подключаем группу:", group["name"])
+    print(f"Запущен модератор: {group['name']}")
 
+    for event in longpoll.listen():
 
-longpoll = VkBotLongPoll(
-    vk_session,
-    group_id
-)
+        if event.type == VkBotEventType.MESSAGE_NEW:
 
-print("Бот слушает сообщения...")
+            message = event.object.message
 
+            user_id = message["from_id"]
+            peer_id = message["peer_id"]
 
-for event in longpoll.listen():
+            text = message.get("text", "")
 
-    if event.type == VkBotEventType.MESSAGE_NEW:
+            print(
+                f"[{group['name']}] "
+                f"{user_id}: {text}"
+            )
 
-        user_id = event.object.message["from_id"]
+            if should_delete(user_id, group):
 
-        text = event.object.message["text"]
+                try:
 
-        print(
-            "Новое сообщение:",
-            user_id,
-            text
-        )
+                    vk.messages.delete(
+                        message_ids=message["id"]
+                    )
+
+                    print(
+                        "Удалено сообщение:",
+                        message["id"]
+                    )
+
+                except Exception as error:
+
+                    print(
+                        "Ошибка удаления:",
+                        error
+                    )
