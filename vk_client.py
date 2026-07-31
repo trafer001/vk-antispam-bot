@@ -16,7 +16,7 @@ if not group_id:
 
     vk_session = vk_api.VkApi(token=token)
 
-    vk = vk_session.get_api()
+    vk.groups.getById()
 
     longpoll = VkBotLongPoll(
         vk_session,
