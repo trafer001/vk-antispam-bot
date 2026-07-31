@@ -1,6 +1,5 @@
-def is_admin(user_id, group):
-    return user_id in group.get("admins", [])
-
+def should_delete(user_id, group):
+    return not is_allowed(user_id, group)
 
 def is_trusted(user_id, group):
     return user_id in group.get("trusted_users", [])
