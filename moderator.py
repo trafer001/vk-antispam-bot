@@ -5,7 +5,11 @@ def is_admin(user_id, group):
 def is_trusted(user_id, group):
     return user_id in group.get("trusted_users", [])
 
-
+def is_allowed(user_id, group):
+    return (
+        is_admin(user_id, group)
+        or is_trusted(user_id, group)
+    )
 
 def should_delete(user_id, group):
 
