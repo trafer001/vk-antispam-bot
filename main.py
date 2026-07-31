@@ -33,6 +33,11 @@ for group in groups:
 print()
 
 print(f"Успешно подключено групп: {len(connections)}")
+
+if not connections:
+    print("Нет доступных групп для запуска.")
+    exit()
+
 print("Инициализация завершена")
 print()
 
