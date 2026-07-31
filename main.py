@@ -1,3 +1,7 @@
+import time
+
+from threading import Thread
+from bot import start_bot
 from config import load_groups
 from vk_client import create_connection
 
@@ -30,3 +34,21 @@ print()
 
 print(f"Успешно подключено групп: {len(connections)}")
 print("Инициализация завершена")
+print()
+
+print("Запуск модераторов...")
+
+for connection in connections:
+
+    thread = Thread(
+        target=start_bot,
+        args=(connection,),
+        daemon=True
+    )
+
+    thread.start()
+
+print("Все группы запущены.")
+
+while True:
+    time.sleep(1)
