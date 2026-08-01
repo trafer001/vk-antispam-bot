@@ -1,7 +1,7 @@
 from vk_api.bot_longpoll import VkBotEventType
 from moderator import should_delete
 from logger import log
-
+from commands import process_command
 
 def start_bot(connection):
 
@@ -27,7 +27,10 @@ def start_bot(connection):
 
                 user_id = message["from_id"]
                 text = message.get("text", "")
-
+                
+                if process_command(message, user_id, group):
+                    continue
+                
                 log(
                     f"[{group['name']}] "
                     f"ID={message_id} "
