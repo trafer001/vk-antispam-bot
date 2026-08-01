@@ -2,6 +2,7 @@ from vk_api.bot_longpoll import VkBotEventType
 from moderator import should_delete
 from logger import log
 
+
 def start_bot(connection):
 
     vk = connection["vk"]
@@ -27,18 +28,17 @@ def start_bot(connection):
                 log(
                     f"[{group['name']}] "
                     f"{user_id}: {text}"
-                                        )
                 )
 
                 if should_delete(user_id, group):
 
                     log(
-                            f"[{group['name']}] "
-                            f"Сообщение пользователя {user_id} помечено к удалению"
-                                         )
+                        f"[{group['name']}] "
+                        f"Сообщение пользователя {user_id} помечено к удалению"
+                    )
 
         except Exception as error:
 
             log(
-    f"[{group['name']}] Ошибка Long Poll: {error}"
-)
+                f"[{group['name']}] Ошибка Long Poll: {error}"
+            )
