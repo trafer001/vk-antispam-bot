@@ -12,14 +12,8 @@ def start_bot(connection):
 
     while True:
         
+        try:
         
-        
-
-    try:
-        
-        
-        
-
         for event in longpoll.listen():
 
             if event.type != VkBotEventType.MESSAGE_NEW:
