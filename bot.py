@@ -1,6 +1,6 @@
 from vk_api.bot_longpoll import VkBotEventType
 from moderator import should_delete
-
+from logger import log
 
 def start_bot(connection):
 
