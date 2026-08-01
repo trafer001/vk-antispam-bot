@@ -6,16 +6,19 @@ def create_connection(group):
     """Создает подключение к одной группе"""
 
     token = group.get("token")
-group_id = group.get("group_id")
+    group_id = group.get("group_id")
 
-if not token:
-    raise ValueError("Не указан token")
+    if not token:
+        raise ValueError("Не указан token")
 
-if not group_id:
-    raise ValueError("Не указан group_id")
+    if not group_id:
+        raise ValueError("Не указан group_id")
 
     vk_session = vk_api.VkApi(token=token)
 
+    vk = vk_session.get_api()
+
+    # Проверяем, что токен рабочий
     vk.groups.getById()
 
     longpoll = VkBotLongPoll(
