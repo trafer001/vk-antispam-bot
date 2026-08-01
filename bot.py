@@ -29,9 +29,11 @@ def start_bot(connection):
                 text = message.get("text", "")
 
                 log(
-                    f"[{group['name']}] "
-                    f"{user_id}: {text}"
-                )
+                   f"[{group['name']}] "
+                   f"ID={message_id} "
+                   f"USER={user_id} "
+                   f"TEXT={text}"
+)
 
                 if should_delete(user_id, group):
 
