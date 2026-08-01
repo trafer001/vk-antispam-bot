@@ -8,7 +8,7 @@ def start_bot(connection):
     longpoll = connection["longpoll"]
     group = connection["group"]
 
-    print(f"Запущен модератор: {group['name']}")
+    log(f"Запущен модератор: {group['name']}")
 
     while True:
 
@@ -24,18 +24,21 @@ def start_bot(connection):
                 user_id = message["from_id"]
                 text = message.get("text", "")
 
-                print(
+                log(
                     f"[{group['name']}] "
                     f"{user_id}: {text}"
+                                        )
                 )
 
                 if should_delete(user_id, group):
 
-                    print("Сообщение помечено к удалению")
+                    log(
+                            f"[{group['name']}] "
+                            f"Сообщение пользователя {user_id} помечено к удалению"
+                                         )
 
         except Exception as error:
 
-            print(
-                f"[{group['name']}] Ошибка Long Poll:",
-                error
-            )
+            log(
+    f"[{group['name']}] Ошибка Long Poll: {error}"
+)
