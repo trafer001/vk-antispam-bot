@@ -21,7 +21,10 @@ def start_bot(connection):
                     continue
 
                 message = event.object.message
-
+                
+                message_id = message["id"]
+                 peer_id = message["peer_id"]
+                
                 user_id = message["from_id"]
                 text = message.get("text", "")
 
