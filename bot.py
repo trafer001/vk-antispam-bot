@@ -3,6 +3,7 @@ from moderator import should_delete, get_user_role
 from logger import log
 from commands import process_command
 
+
 def start_bot(connection):
 
     vk = connection["vk"]
@@ -24,23 +25,22 @@ def start_bot(connection):
 
                 message_id = message["id"]
                 peer_id = message["peer_id"]
-
                 user_id = message["from_id"]
                 text = message.get("text", "")
-                
+
                 role = get_user_role(user_id, group)
-                
+
                 if process_command(vk, message, user_id, group):
                     continue
-                
-            log(
-                f"[{group['name']}] "
-                f"ROLE={role} "
-                f"ID={message_id} "
-                f"PEER={peer_id} "
-                f"USER={user_id} "
-                f"TEXT={text}"
-            )
+
+                log(
+                    f"[{group['name']}] "
+                    f"ROLE={role} "
+                    f"ID={message_id} "
+                    f"PEER={peer_id} "
+                    f"USER={user_id} "
+                    f"TEXT={text}"
+                )
 
                 if should_delete(user_id, group):
 
@@ -48,6 +48,15 @@ def start_bot(connection):
                         f"[{group['name']}] "
                         f"Сообщение пользователя {user_id} "
                         f"помечено к удалению"
+                    )
+
+                    # Здесь позже будет удаление сообщения
+
+                else:
+
+                    log(
+                        f"[{group['name']}] "
+                        f"Сообщение оставлено"
                     )
 
         except Exception as error:
