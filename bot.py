@@ -21,25 +21,27 @@ def start_bot(connection):
                     continue
 
                 message = event.object.message
-                
+
                 message_id = message["id"]
-                 peer_id = message["peer_id"]
-                
+                peer_id = message["peer_id"]
+
                 user_id = message["from_id"]
                 text = message.get("text", "")
 
                 log(
-                   f"[{group['name']}] "
-                   f"ID={message_id} "
-                   f"USER={user_id} "
-                   f"TEXT={text}"
-)
+                    f"[{group['name']}] "
+                    f"ID={message_id} "
+                    f"PEER={peer_id} "
+                    f"USER={user_id} "
+                    f"TEXT={text}"
+                )
 
                 if should_delete(user_id, group):
 
                     log(
                         f"[{group['name']}] "
-                        f"Сообщение пользователя {user_id} помечено к удалению"
+                        f"Сообщение пользователя {user_id} "
+                        f"помечено к удалению"
                     )
 
         except Exception as error:
