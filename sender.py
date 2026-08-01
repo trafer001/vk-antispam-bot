@@ -7,12 +7,20 @@ def send_message(vk, user_id, text):
 
         vk.messages.send(
             user_id=user_id,
-            random_id=0,
-            message=text
+            message=text,
+            random_id=0
         )
 
-        log(f"Отправлено сообщение пользователю {user_id}")
+        log(
+            f"Отправлено сообщение пользователю {user_id}"
+        )
+
+        return True
 
     except Exception as error:
 
-        log(f"Ошибка отправки сообщения: {error}")
+        log(
+            f"Ошибка отправки сообщения: {error}"
+        )
+
+        return False
