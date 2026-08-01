@@ -13,5 +13,16 @@ def is_allowed(user_id, group):
     )
 
 
+def get_user_role(user_id, group):
+
+    if is_admin(user_id, group):
+        return "admin"
+
+    if is_trusted(user_id, group):
+        return "trusted"
+
+    return "member"
+
+
 def should_delete(user_id, group):
-    return not is_allowed(user_id, group)
+    return get_user_role(user_id, group) == "member"
