@@ -10,15 +10,18 @@ def start_bot(connection):
 
     print(f"Запущен модератор: {group['name']}")
 
-    for event in longpoll.listen():
+    while True:
 
-        if event.type == VkBotEventType.MESSAGE_NEW:
+    try:
+
+        for event in longpoll.listen():
+
+            if event.type != VkBotEventType.MESSAGE_NEW:
+                continue
 
             message = event.object.message
 
             user_id = message["from_id"]
-            peer_id = message["peer_id"]
-
             text = message.get("text", "")
 
             print(
@@ -28,20 +31,11 @@ def start_bot(connection):
 
             if should_delete(user_id, group):
 
-                try:
+                print("Сообщение помечено к удалению")
 
-                    vk.messages.delete(
-                        message_ids=message["id"]
-                    )
+    except Exception as error:
 
-                    print(
-                        "Удалено сообщение:",
-                        message["id"]
-                    )
-
-                except Exception as error:
-
-                    print(
-                        "Ошибка удаления:",
-                        error
-                    )
+        print(
+            f"[{group['name']}] Ошибка Long Poll:",
+            error
+        )
