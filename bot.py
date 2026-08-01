@@ -1,5 +1,5 @@
 from vk_api.bot_longpoll import VkBotEventType
-from moderator import should_delete
+from moderator import should_delete, get_user_role
 from logger import log
 from commands import process_command
 
