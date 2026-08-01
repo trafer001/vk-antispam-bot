@@ -11,8 +11,14 @@ def start_bot(connection):
     print(f"Запущен модератор: {group['name']}")
 
     while True:
+        
+        
+        
 
     try:
+        
+        
+        
 
         for event in longpoll.listen():
 
