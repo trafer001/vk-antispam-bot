@@ -28,16 +28,19 @@ def start_bot(connection):
                 user_id = message["from_id"]
                 text = message.get("text", "")
                 
+                role = get_user_role(user_id, group)
+                
                 if process_command(vk, message, user_id, group):
                     continue
                 
-                log(
-                    f"[{group['name']}] "
-                    f"ID={message_id} "
-                    f"PEER={peer_id} "
-                    f"USER={user_id} "
-                    f"TEXT={text}"
-                )
+            log(
+                f"[{group['name']}] "
+                f"ROLE={role} "
+                f"ID={message_id} "
+                f"PEER={peer_id} "
+                f"USER={user_id} "
+                f"TEXT={text}"
+            )
 
                 if should_delete(user_id, group):
 
