@@ -18,9 +18,8 @@ def create_connection(group):
 
     vk = vk_session.get_api()
 
-    # Проверяем, что токен рабочий
-    vk.groups.getById()
-
+    vk.groups.getById(group_id=group_id)
+    
     longpoll = VkBotLongPoll(
         vk_session,
         group_id
