@@ -28,7 +28,7 @@ def start_bot(connection):
                 user_id = message["from_id"]
                 text = message.get("text", "")
                 
-                if process_command(message, user_id, group):
+                if process_command(vk, message, user_id, group):
                     continue
                 
                 log(
