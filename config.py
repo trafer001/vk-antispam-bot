@@ -1,8 +1,25 @@
 import json
 
 
+CONFIG_FILE = "groups.json"
+
+
 def load_groups():
-    with open("groups.json", "r", encoding="utf-8") as file:
+
+    with open(CONFIG_FILE, "r", encoding="utf-8") as file:
+
         data = json.load(file)
 
     return data.get("groups", [])
+
+
+def save_groups(groups):
+
+    with open(CONFIG_FILE, "w", encoding="utf-8") as file:
+
+        json.dump(
+            {"groups": groups},
+            file,
+            ensure_ascii=False,
+            indent=4
+        )
