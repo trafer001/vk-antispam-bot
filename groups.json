@@ -1,25 +1,14 @@
-import json
-
-
-CONFIG_FILE = "groups.json"
-
-
-def load_groups():
-
-    with open(CONFIG_FILE, "r", encoding="utf-8") as file:
-
-        data = json.load(file)
-
-    return data.get("groups", [])
-
-
-def save_groups(groups):
-
-    with open(CONFIG_FILE, "w", encoding="utf-8") as file:
-
-        json.dump(
-            {"groups": groups},
-            file,
-            ensure_ascii=False,
-            indent=4
-        )
+{
+  "groups": [
+    {
+      "name": "доход каждый день",
+      "group_id": 240533788,
+      "token": vk1.a.hNCE6NFAZbOE_XiT1ZJ4G_8WxV0SnbWJwnKUWt_YCbWEUo25BtRnO-Uukbf0ayMTfjBKJ1xCIsb8-ar6cFDkrthRZtaqbKT7WnYfsbQ6cKPBGhi1sq70zpBpowA_rVUHjbndn10F3edqyOQj7k9td5_PHVc6vggm8MFdnhGEDslHtAq7JHapPZHc_ZfmU5EyZrrcfMtHmbWqZATM-vWEww ,
+      "admins": [
+      1124423622
+      ],
+      "trusted_users": [],
+      "enabled": true
+    }
+  ]
+}
