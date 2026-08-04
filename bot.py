@@ -2,6 +2,7 @@ from vk_api.bot_longpoll import VkBotEventType
 from moderator import should_delete, get_user_role
 from logger import log
 from commands import process_command
+from delete_message import delete_message
 
 
 def start_bot(connection):
@@ -26,7 +27,7 @@ def start_bot(connection):
                 message_id = message["id"]
                 peer_id = message["peer_id"]
                 user_id = message["from_id"]
-                text = message.get("text", "")
+                text = message.get("text", "").strip()
 
                 role = get_user_role(user_id, group)
 
@@ -44,23 +45,36 @@ def start_bot(connection):
 
                 if should_delete(user_id, group):
 
-                    log(
-                        f"[{group['name']}] "
-                        f"Сообщение пользователя {user_id} "
-                        f"помечено к удалению"
+                    success = delete_message(
+                        vk,
+                        group,
+                        message_id
                     )
 
-                    # Здесь позже будет удаление сообщения
+                    if success:
+
+                        log(
+                            f"[{group['name']}] "
+                            f"Сообщение пользователя {user_id} удалено"
+                        )
+
+                    else:
+
+                        log(
+                            f"[{group['name']}] "
+                            f"Не удалось удалить сообщение {message_id}"
+                        )
 
                 else:
 
                     log(
                         f"[{group['name']}] "
-                        f"Сообщение оставлено"
+                        f"Сообщение разрешено"
                     )
 
         except Exception as error:
 
             log(
-                f"[{group['name']}] Ошибка Long Poll: {error}"
+                f"[{group['name']}] "
+                f"Ошибка Long Poll: {error}"
             )
