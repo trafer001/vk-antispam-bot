@@ -1,7 +1,9 @@
 import json
+import shutil
 
 
 CONFIG_FILE = "groups.json"
+BACKUP_FILE = "groups.backup.json"
 
 
 def load_groups():
@@ -14,6 +16,17 @@ def load_groups():
 
 
 def save_groups(groups):
+
+    try:
+
+        shutil.copyfile(
+            CONFIG_FILE,
+            BACKUP_FILE
+        )
+
+    except FileNotFoundError:
+
+        pass
 
     with open(CONFIG_FILE, "w", encoding="utf-8") as file:
 
