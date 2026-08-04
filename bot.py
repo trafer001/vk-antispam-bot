@@ -3,6 +3,7 @@ from moderator import should_delete, get_user_role
 from logger import log
 from commands import process_command
 from delete_message import delete_message
+from stats import message_received, message_deleted
 
 
 def start_bot(connection):
@@ -23,6 +24,8 @@ def start_bot(connection):
                     continue
 
                 message = event.object.message
+
+                message_received()
 
                 message_id = message.get("id")
                 peer_id = message.get("peer_id")
@@ -71,6 +74,8 @@ def start_bot(connection):
 
                     if success:
 
+                        message_deleted()
+
                         log(
                             f"[{group['name']}] "
                             f"Сообщение пользователя {user_id} удалено"
@@ -95,4 +100,3 @@ def start_bot(connection):
             log(
                 f"[{group['name']}] "
                 f"Ошибка Long Poll: {error}"
-            )
