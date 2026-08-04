@@ -1,0 +1,11 @@
+bot.log
+groups.json
+groups.backup.json
+
+.env
+
+__pycache__/
+*.pyc
+
+.vscode/
+.idea/
