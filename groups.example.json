@@ -1,0 +1,14 @@
+{
+    "groups": [
+        {
+            "name": "Example Group",
+            "group_id": 123456789,
+            "token": "YOUR_GROUP_TOKEN",
+            "admins": [
+                123456789
+            ],
+            "trusted_users": [],
+            "enabled": true
+        }
+    ]
+}
