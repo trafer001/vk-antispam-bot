@@ -18,4 +18,4 @@ def command_used():
 
 
 def get_stats():
-    return stats.copy()
+    return stats.copy() 
