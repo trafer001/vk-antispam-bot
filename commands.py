@@ -1,7 +1,8 @@
-from logger import log
+ logger import log
 from sender import send_message
 from moderator import is_admin
 from config import load_groups, save_groups
+from stats import command_used, get_stats
 
 
 def process_command(vk, message, user_id, group):
@@ -19,6 +20,8 @@ def process_command(vk, message, user_id, group):
         )
 
         return True
+
+    command_used()
 
     if text == "/status":
 
@@ -44,9 +47,27 @@ def process_command(vk, message, user_id, group):
                 "Команды:\n"
                 "/status\n"
                 "/help\n"
+                "/stats\n"
                 "/list\n"
                 "/trust ID\n"
                 "/untrust ID"
+            )
+        )
+
+        return True
+
+    if text == "/stats":
+
+        stats = get_stats()
+
+        send_message(
+            vk,
+            user_id,
+            (
+                "📊 Статистика\n\n"
+                f"Получено сообщений: {stats['received']}\n"
+                f"Удалено сообщений: {stats['deleted']}\n"
+                f"Команд выполнено: {stats['commands']}"
             )
         )
 
@@ -58,7 +79,7 @@ def process_command(vk, message, user_id, group):
 
         if trusted:
 
-            answer = "👥 Доверенные:\n\n"
+            answer = "👥 Доверенные пользователи:\n\n"
 
             answer += "\n".join(
                 str(user)
@@ -67,7 +88,7 @@ def process_command(vk, message, user_id, group):
 
         else:
 
-            answer = "Список пуст."
+            answer = "Список доверенных пользователей пуст."
 
         send_message(
             vk,
@@ -80,12 +101,9 @@ def process_command(vk, message, user_id, group):
     if text.startswith("/trust "):
 
         try:
+            trusted_id = int(text.split()[1])
 
-            trusted_id = int(
-                text.split()[1]
-            )
-
-        except:
+        except (IndexError, ValueError):
 
             send_message(
                 vk,
@@ -97,16 +115,13 @@ def process_command(vk, message, user_id, group):
 
         if trusted_id not in group["trusted_users"]:
 
-            group["trusted_users"].append(
-                trusted_id
-            )
+            group["trusted_users"].append(trusted_id)
 
             groups = load_groups()
 
             for item in groups:
 
                 if item["group_id"] == group["group_id"]:
-
                     item["trusted_users"] = group["trusted_users"]
 
             save_groups(groups)
@@ -122,12 +137,9 @@ def process_command(vk, message, user_id, group):
     if text.startswith("/untrust "):
 
         try:
+            trusted_id = int(text.split()[1])
 
-            trusted_id = int(
-                text.split()[1]
-            )
-
-        except:
+        except (IndexError, ValueError):
 
             send_message(
                 vk,
@@ -139,16 +151,13 @@ def process_command(vk, message, user_id, group):
 
         if trusted_id in group["trusted_users"]:
 
-            group["trusted_users"].remove(
-                trusted_id
-            )
+            group["trusted_users"].remove(trusted_id)
 
             groups = load_groups()
 
             for item in groups:
 
                 if item["group_id"] == group["group_id"]:
-
                     item["trusted_users"] = group["trusted_users"]
 
             save_groups(groups)
@@ -164,7 +173,7 @@ def process_command(vk, message, user_id, group):
     send_message(
         vk,
         user_id,
-        "Неизвестная команда."
+        "Неизвестная команда.\nНапишите /help"
     )
 
     return True
