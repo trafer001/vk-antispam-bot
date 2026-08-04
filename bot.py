@@ -24,10 +24,19 @@ def start_bot(connection):
 
                 message = event.object.message
 
-                message_id = message["id"]
-                peer_id = message["peer_id"]
-                user_id = message["from_id"]
+                message_id = message.get("id")
+                peer_id = message.get("peer_id")
+                user_id = message.get("from_id")
                 text = message.get("text", "").strip()
+
+                if user_id is None:
+
+                    log(
+                        f"[{group['name']}] "
+                        "Не удалось определить пользователя"
+                    )
+
+                    continue
 
                 role = get_user_role(user_id, group)
 
@@ -44,6 +53,15 @@ def start_bot(connection):
                 )
 
                 if should_delete(user_id, group):
+
+                    if message_id is None:
+
+                        log(
+                            f"[{group['name']}] "
+                            "Не удалось определить ID сообщения"
+                        )
+
+                        continue
 
                     success = delete_message(
                         vk,
@@ -69,7 +87,7 @@ def start_bot(connection):
 
                     log(
                         f"[{group['name']}] "
-                        f"Сообщение разрешено"
+                        f"Сообщение пользователя {user_id} разрешено"
                     )
 
         except Exception as error:
