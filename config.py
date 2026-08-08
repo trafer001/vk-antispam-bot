@@ -8,11 +8,38 @@ BACKUP_FILE = "groups.backup.json"
 
 def load_groups():
 
-    with open(CONFIG_FILE, "r", encoding="utf-8") as file:
+    try:
 
-        data = json.load(file)
+        with open(
+            CONFIG_FILE,
+            "r",
+            encoding="utf-8"
+        ) as file:
 
-    return data.get("groups", [])
+            data = json.load(file)
+
+    except FileNotFoundError as error:
+
+        raise FileNotFoundError(
+            "Файл groups.json не найден. "
+            "Создай его на основе groups.example.json."
+        ) from error
+
+    except json.JSONDecodeError as error:
+
+        raise ValueError(
+            "Файл groups.json содержит некорректный JSON."
+        ) from error
+
+    groups = data.get("groups", [])
+
+    if not isinstance(groups, list):
+
+        raise ValueError(
+            "Поле 'groups' в groups.json должно быть списком."
+        )
+
+    return groups
 
 
 def save_groups(groups):
@@ -28,7 +55,11 @@ def save_groups(groups):
 
         pass
 
-    with open(CONFIG_FILE, "w", encoding="utf-8") as file:
+    with open(
+        CONFIG_FILE,
+        "w",
+        encoding="utf-8"
+    ) as file:
 
         json.dump(
             {"groups": groups},
