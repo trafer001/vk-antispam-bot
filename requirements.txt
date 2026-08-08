@@ -1,2 +1,3 @@
-vk_api
+vk-api
 requests
+python-dotenv
