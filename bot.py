@@ -1,4 +1,5 @@
 from vk_api.bot_longpoll import VkBotEventType
+
 from moderator import should_delete, get_user_role
 from logger import log
 from commands import process_command
@@ -12,7 +13,9 @@ def start_bot(connection):
     longpoll = connection["longpoll"]
     group = connection["group"]
 
-    log(f"Запущен модератор: {group['name']}")
+    log(
+        f"Запущен модератор: {group['name']}"
+    )
 
     while True:
 
@@ -41,9 +44,17 @@ def start_bot(connection):
 
                     continue
 
-                role = get_user_role(user_id, group)
+                role = get_user_role(
+                    user_id,
+                    group
+                )
 
-                if process_command(vk, message, user_id, group):
+                if process_command(
+                    vk,
+                    message,
+                    user_id,
+                    group
+                ):
                     continue
 
                 log(
@@ -55,7 +66,10 @@ def start_bot(connection):
                     f"TEXT={text}"
                 )
 
-                if should_delete(user_id, group):
+                if should_delete(
+                    user_id,
+                    group
+                ):
 
                     if message_id is None:
 
@@ -78,21 +92,24 @@ def start_bot(connection):
 
                         log(
                             f"[{group['name']}] "
-                            f"Сообщение пользователя {user_id} удалено"
+                            f"Сообщение пользователя "
+                            f"{user_id} удалено"
                         )
 
                     else:
 
                         log(
                             f"[{group['name']}] "
-                            f"Не удалось удалить сообщение {message_id}"
+                            f"Не удалось удалить "
+                            f"сообщение {message_id}"
                         )
 
                 else:
 
                     log(
                         f"[{group['name']}] "
-                        f"Сообщение пользователя {user_id} разрешено"
+                        f"Сообщение пользователя "
+                        f"{user_id} разрешено"
                     )
 
         except Exception as error:
@@ -100,3 +117,4 @@ def start_bot(connection):
             log(
                 f"[{group['name']}] "
                 f"Ошибка Long Poll: {error}"
+            )
