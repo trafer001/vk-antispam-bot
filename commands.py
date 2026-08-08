@@ -1,4 +1,4 @@
- logger import log
+ from logger import log
 from sender import send_message
 from moderator import is_admin
 from config import load_groups, save_groups
@@ -79,16 +79,19 @@ def process_command(vk, message, user_id, group):
 
         if trusted:
 
-            answer = "👥 Доверенные пользователи:\n\n"
-
-            answer += "\n".join(
-                str(user)
-                for user in trusted
+            answer = (
+                "👥 Доверенные пользователи:\n\n"
+                + "\n".join(
+                    str(user)
+                    for user in trusted
+                )
             )
 
         else:
 
-            answer = "Список доверенных пользователей пуст."
+            answer = (
+                "Список доверенных пользователей пуст."
+            )
 
         send_message(
             vk,
@@ -100,73 +103,135 @@ def process_command(vk, message, user_id, group):
 
     if text.startswith("/trust "):
 
-        try:
-            trusted_id = int(text.split()[1])
+        parts = text.split()
 
-        except (IndexError, ValueError):
+        if len(parts) != 2:
 
             send_message(
                 vk,
                 user_id,
-                "Неверный ID."
+                "Использование: /trust ID"
             )
 
             return True
 
-        if trusted_id not in group["trusted_users"]:
+        try:
 
-            group["trusted_users"].append(trusted_id)
+            trusted_id = int(parts[1])
+
+        except ValueError:
+
+            send_message(
+                vk,
+                user_id,
+                "ID пользователя должен быть числом."
+            )
+
+            return True
+
+        trusted_users = group.setdefault(
+            "trusted_users",
+            []
+        )
+
+        if trusted_id not in trusted_users:
+
+            trusted_users.append(trusted_id)
 
             groups = load_groups()
 
             for item in groups:
 
-                if item["group_id"] == group["group_id"]:
-                    item["trusted_users"] = group["trusted_users"]
+                if item.get("group_id") == group.get("group_id"):
+
+                    item["trusted_users"] = list(
+                        trusted_users
+                    )
+
+                    break
 
             save_groups(groups)
 
-        send_message(
-            vk,
-            user_id,
-            "Пользователь добавлен."
-        )
+            send_message(
+                vk,
+                user_id,
+                f"✅ Пользователь {trusted_id} добавлен в доверенные."
+            )
+
+        else:
+
+            send_message(
+                vk,
+                user_id,
+                f"Пользователь {trusted_id} уже находится в списке."
+            )
 
         return True
 
     if text.startswith("/untrust "):
 
-        try:
-            trusted_id = int(text.split()[1])
+        parts = text.split()
 
-        except (IndexError, ValueError):
+        if len(parts) != 2:
 
             send_message(
                 vk,
                 user_id,
-                "Неверный ID."
+                "Использование: /untrust ID"
             )
 
             return True
 
-        if trusted_id in group["trusted_users"]:
+        try:
 
-            group["trusted_users"].remove(trusted_id)
+            trusted_id = int(parts[1])
+
+        except ValueError:
+
+            send_message(
+                vk,
+                user_id,
+                "ID пользователя должен быть числом."
+            )
+
+            return True
+
+        trusted_users = group.setdefault(
+            "trusted_users",
+            []
+        )
+
+        if trusted_id in trusted_users:
+
+            trusted_users.remove(trusted_id)
 
             groups = load_groups()
 
             for item in groups:
 
-                if item["group_id"] == group["group_id"]:
-                    item["trusted_users"] = group["trusted_users"]
+                if item.get("group_id") == group.get("group_id"):
+
+                    item["trusted_users"] = list(
+                        trusted_users
+                    )
+
+                    break
 
             save_groups(groups)
 
-        send_message(
-            vk,
-            user_id,
-            "Пользователь удалён."
-        )
+            send_message(
+                vk,
+                user_id,
+                f"✅ Пользователь {trusted_id} удалён из доверенных."
+            )
+
+        else:
+
+            send_message(
+                vk,
+                user_id,
+                f"Пользователя {trusted_id} нет в списке."
+            )
 
         return True
 
